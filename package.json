@@ -41,7 +41,6 @@
   },
   "devDependencies": {
     "@logux/oxc-configs": "^1.2.0",
-    "@size-limit/preset-small-lib": "^14.0.0",
     "@types/node": "^26.6.2",
     "better-node-test": "^1.0.0",
     "oxfmt": "^0.70.0",
