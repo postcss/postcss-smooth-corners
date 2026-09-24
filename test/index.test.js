@@ -146,3 +146,16 @@ test('does not add spaces to minified CSS', () => {
       '@supports (corner-shape:squircle){border-radius:17px}}'
   )
 })
+
+test('supports global regexp in props', () => {
+  run(
+    ':root { --radius-s: 4px; --radius-m: 8px; --radius-l: 16px; }',
+    ':root { --radius-s: 4px; ' +
+      '@supports (corner-shape:squircle) { --radius-s: 7px } ' +
+      '--radius-m: 8px; ' +
+      '@supports (corner-shape:squircle) { --radius-m: 14px } ' +
+      '--radius-l: 16px; ' +
+      '@supports (corner-shape:squircle) { --radius-l: 27px } }',
+    { props: /^--radius/g }
+  )
+})

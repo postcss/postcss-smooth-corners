@@ -53,7 +53,8 @@ let plugin = (opts = {}) => {
       let parent = decl.parent
       if (isSquircleFallback(parent)) return
       if (decl.prop.startsWith('--')) {
-        if (opts.props?.test(decl.prop) && !decl.value.includes('var(')) {
+        let isRadius = opts.props && decl.prop.search(opts.props) !== -1
+        if (isRadius && !decl.value.includes('var(')) {
           increaseForSquircle(decl, helpers)
         }
       } else if (/^border(-[a-z]+)*-radius$/.test(decl.prop)) {
