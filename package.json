@@ -1,7 +1,7 @@
 {
   "name": "postcss-smooth-corners",
   "version": "0.0.0",
-  "description": "PostCSS plugin to add squircle corners with the same visual radius",
+  "description": "PostCSS plugin to use smooth squircle corners with the right size",
   "keywords": [
     "border-radius",
     "corner-shape",

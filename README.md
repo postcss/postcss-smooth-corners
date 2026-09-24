@@ -4,14 +4,23 @@
      title="Philosopher’s stone, logo of PostCSS"
      src="https://postcss.org/logo-leftp.svg">
 
-[PostCSS] plugin to use smooth squircle corners without making them look
-smaller. See [demo](https://postcss.github.io/postcss-smooth-corners/).
+[PostCSS] plugin to use smooth squircle corners on your website.
+See [demo](https://postcss.github.io/postcss-smooth-corners/).
 
-With the same `border-radius`, [`corner-shape: squircle`] cuts a much smaller
-area than a round corner, so the element looks sharper than the design.
-The plugin increases the radius by 1.715 (rounding pixels to integers)
-only in browsers with `corner-shape` support. Other browsers will keep
-the round corners with the original radius.
+Round corners start suddenly. Squircle corners start slowly and smoothly.
+Because of this, they look softer, like iPhone icons. Browsers now support
+them with [`corner-shape: squircle`].
+
+The plugin has 2 modes:
+
+- **Fix size** (default): you add `corner-shape: squircle` where you need it.
+  The plugin increases `border-radius`, because with the same radius
+  a squircle looks smaller than a round corner.
+- **Auto squircle** (`auto: true`): the plugin adds `corner-shape: squircle`
+  to every `border-radius` and fixes the size.
+
+In both modes, browsers without `corner-shape` support will keep round corners
+with the original radius.
 
 ```css
 /* Input CSS */
@@ -71,14 +80,53 @@ and set this plugin in settings.
 ```
 
 The output CSS uses CSS Nesting. If you need to support old browsers,
-put `postcss-nesting` after this plugin.
+put [`postcss-nesting`] after this plugin.
 
-## Options
+[`postcss-nesting`]: https://github.com/csstools/postcss-plugins/tree/main/plugins/postcss-nesting
 
-### `auto`
+## Modes
 
-Add `corner-shape: squircle` to every `border-radius`, except circles
-(`50%` or more) and small radius.
+### Fix Size
+
+By default, the plugin changes only rules with `corner-shape: squircle`.
+It increases `border-radius` by 1.715 (and rounds pixels) inside
+`@supports`, so the squircle will have the same visual size as the round
+corner from the design.
+
+```js
+smoothCorners()
+```
+
+```css
+/* Input CSS */
+.card {
+  corner-shape: squircle;
+  border-radius: 10px;
+}
+.button {
+  border-radius: 10px;
+}
+```
+
+```css
+/* Output CSS */
+.card {
+  corner-shape: squircle;
+  border-radius: 10px;
+  @supports (corner-shape: squircle) {
+    border-radius: 17px;
+  }
+}
+.button {
+  border-radius: 10px;
+}
+```
+
+### Auto Squircle
+
+With `auto: true`, the plugin makes all corners squircle. It adds
+`corner-shape: squircle` to every `border-radius` and fixes the size.
+It doesn’t change circles (`50%` or more) and very small radius.
 
 ```js
 smoothCorners({ auto: true })
@@ -109,6 +157,8 @@ smoothCorners({ auto: true })
 ```
 
 Set `corner-shape: round` to keep round corners for a specific rule.
+
+## Options
 
 ### `autoMinSize`
 
@@ -151,3 +201,29 @@ smoothCorners({ props: /^--radius-/ })
 
 The plugin adds `corner-shape: inherit` to `border-radius: inherit` to copy
 the corner shape together with the radius from the parent.
+
+```css
+/* Input CSS */
+.card {
+  corner-shape: squircle;
+  border-radius: 1rem;
+}
+.card img {
+  border-radius: inherit;
+}
+```
+
+```css
+/* Output CSS */
+.card {
+  corner-shape: squircle;
+  border-radius: 1rem;
+  @supports (corner-shape: squircle) {
+    border-radius: 1.715rem;
+  }
+}
+.card img {
+  corner-shape: inherit;
+  border-radius: inherit;
+}
+```
