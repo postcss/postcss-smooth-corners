@@ -22,9 +22,14 @@ The plugin has 2 modes:
 In both modes, browsers without `corner-shape` support will keep round corners
 with the original radius.
 
-<a href="https://postcss.github.io/postcss-smooth-corners/">
-  <img src="./test/demo/screenshot.png" alt="Round corner, squircle without plugin and squircle with plugin" width="600">
-</a>
+<p align="center">
+  <a href="https://postcss.github.io/postcss-smooth-corners/">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="./test/demo/screenshot-dark.png">
+      <img src="./test/demo/screenshot.png" alt="Round corner, squircle without plugin and squircle with plugin" width="600">
+    </picture>
+  </a>
+</p>
 
 ```css
 /* Input CSS */
