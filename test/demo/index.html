@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PostCSS Smooth Corners demo</title>
+    <style>
+      :root {
+        --background: oklch(0.97 0.003 264);
+        --text: oklch(0.25 0.02 264);
+        --muted: oklch(0.5 0.02 264);
+        --card: oklch(0.62 0.19 264);
+        --round: oklch(0.63 0.22 25);
+        --warning: oklch(0.93 0.07 85);
+
+        color-scheme: light dark;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --background: oklch(0.2 0.01 264);
+          --text: oklch(0.93 0.01 264);
+          --muted: oklch(0.7 0.02 264);
+          --card: oklch(0.65 0.17 264);
+          --round: oklch(0.72 0.19 25);
+          --warning: oklch(0.4 0.08 85);
+        }
+      }
+
+      body {
+        box-sizing: border-box;
+        min-height: 100vh;
+        padding: 2rem 1rem;
+        margin: 0;
+        font-family: system-ui, sans-serif;
+        color: var(--text);
+        background: var(--background);
+      }
+
+      main {
+        max-width: 60rem;
+        margin: 0 auto;
+      }
+
+      header {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem 1.5rem;
+        align-items: baseline;
+        justify-content: space-between;
+        margin-bottom: 1.5rem;
+
+        & a {
+          color: var(--card);
+        }
+      }
+
+      h1 {
+        margin: 0;
+        font-size: 1.5rem;
+      }
+
+      h2 {
+        margin: 0 0 0.5rem;
+        font-size: 1.2rem;
+      }
+
+      .compare {
+        display: flex;
+        gap: 2rem;
+        justify-content: center;
+        margin: 1.5rem 0 3rem;
+
+        & .cell {
+          flex: 0 1 12rem;
+        }
+
+        & .box {
+          max-width: 12rem;
+        }
+      }
+
+      p {
+        margin: 0 0 1rem;
+        line-height: 1.5;
+        color: var(--muted);
+      }
+
+      code {
+        font-size: 0.8rem;
+      }
+
+      .warning {
+        padding: 0.75rem 1rem;
+        margin-bottom: 1.5rem;
+        background: var(--warning);
+        border-radius: 8px;
+
+        @supports (corner-shape: squircle) {
+          display: none;
+        }
+      }
+
+      .table {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 2rem 1.5rem;
+        align-items: start;
+      }
+
+      .head {
+        font-weight: 600;
+        line-height: 1.3;
+        text-align: center;
+      }
+
+      .cell {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: center;
+
+        & code {
+          color: var(--muted);
+          text-align: center;
+        }
+      }
+
+      .box {
+        box-sizing: border-box;
+        width: 100%;
+        max-width: 10rem;
+        aspect-ratio: 1;
+        background: var(--card);
+      }
+
+      /* Plain round corners */
+      .is-round {
+        border-radius: var(--size);
+      }
+
+      /* Squircle without the plugin. Variables are ignored by the plugin. */
+      .is-raw {
+        corner-shape: squircle;
+        border-radius: var(--size);
+      }
+
+      /* Squircle processed by the plugin */
+      .is-fixed.is-l {
+        corner-shape: squircle;
+        border-radius: 48px;
+      }
+
+      .is-l {
+        --size: 48px;
+      }
+
+      /* Fixed squircle over the round corner to show the difference */
+      .overlay {
+        position: relative;
+        width: 100%;
+        max-width: 10rem;
+
+        & .box {
+          max-width: none;
+          opacity: 50%;
+        }
+
+        & .is-round {
+          background: var(--round);
+        }
+
+        & .is-fixed {
+          position: absolute;
+          inset: 0;
+        }
+      }
+
+      @media (width <= 40rem) {
+        .table {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .table .head {
+          display: none;
+        }
+
+        .table .cell::before {
+          font-weight: 600;
+          content: attr(data-title);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>PostCSS Smooth Corners</h1>
+        <a href="https://github.com/postcss/postcss-smooth-corners">
+          Source code on GitHub
+        </a>
+      </header>
+      <p class="warning">
+        Your browser doesn’t support <code>corner-shape</code> yet. All examples
+        will look the same. Try Chrome 139 or newer.
+      </p>
+
+      <h2>Why squircle</h2>
+      <p>
+        Round corners start suddenly. Squircle corners start slowly and
+        smoothly. Because of this, they look softer, like iPhone icons.
+      </p>
+
+      <div class="compare">
+        <div class="cell">
+          <div class="head">Round</div>
+          <div class="box is-round is-l"></div>
+          <code>border-radius: 48px</code>
+        </div>
+        <div class="cell">
+          <div class="head">Squircle</div>
+          <div class="box is-fixed is-l"></div>
+          <code>corner-shape: squircle<br />border-radius: 82px</code>
+        </div>
+      </div>
+
+      <h2>Why bigger radius</h2>
+      <p>
+        With the same <code>border-radius</code>, the squircle corner looks
+        smaller than the round one. The plugin increases the radius inside
+        <code>@supports (corner-shape: squircle)</code> by 1.715 and rounds
+        pixels, so the squircle cuts the same area as the round corner.
+      </p>
+
+      <div class="table">
+        <div class="head">Round</div>
+        <div class="head">Squircle without plugin</div>
+        <div class="head">Squircle with plugin</div>
+        <div class="head">Diff</div>
+
+        <div class="cell" data-title="Round">
+          <div class="box is-round is-l"></div>
+          <code>border-radius: 48px</code>
+        </div>
+        <div class="cell" data-title="Without plugin">
+          <div class="box is-raw is-l"></div>
+          <code>corner-shape: squircle<br />border-radius: 48px</code>
+        </div>
+        <div class="cell" data-title="With plugin">
+          <div class="box is-fixed is-l"></div>
+          <code>corner-shape: squircle<br />border-radius: 82px</code>
+        </div>
+        <div class="cell" data-title="Diff">
+          <div class="overlay">
+            <div class="box is-round is-l"></div>
+            <div class="box is-fixed is-l"></div>
+          </div>
+          <code>red: round<br />blue: squircle with plugin</code>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

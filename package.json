@@ -1,0 +1,71 @@
+{
+  "name": "postcss-smooth-corners",
+  "version": "0.0.0",
+  "description": "PostCSS plugin to add squircle corners with the same visual radius",
+  "keywords": [
+    "border-radius",
+    "corner-shape",
+    "css",
+    "postcss",
+    "postcss-plugin",
+    "smooth-corners",
+    "squircle"
+  ],
+  "license": "MIT",
+  "author": "Andrey Sitnik <andrey@sitnik.es>",
+  "repository": "postcss/postcss-smooth-corners",
+  "funding": [
+    {
+      "type": "opencollective",
+      "url": "https://opencollective.com/postcss/"
+    },
+    {
+      "type": "github",
+      "url": "https://github.com/sponsors/ai"
+    }
+  ],
+  "type": "module",
+  "sideEffects": false,
+  "types": "./index.d.ts",
+  "exports": {
+    ".": "./index.js",
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "start": "vite --host 0.0.0.0 test/demo/",
+    "build": "vite build test/demo/ -m production --base /postcss-smooth-corners/",
+    "test:lint": "oxlint",
+    "test:coverage": "pnpm bnt --coverage 100",
+    "test:types": "check-dts",
+    "test:size": "size-limit",
+    "test:build": "pnpm build",
+    "test": "pnpm run /^test:/"
+  },
+  "devDependencies": {
+    "@logux/oxc-configs": "^1.2.0",
+    "@size-limit/preset-small-lib": "^14.0.0",
+    "@types/node": "^26.6.2",
+    "better-node-test": "^1.0.0",
+    "check-dts": "^2.0.1",
+    "multiocular": "^0.8.4",
+    "oxfmt": "^0.70.0",
+    "oxlint": "^1.85.0",
+    "oxlint-tsgolint": "^7.0.2002",
+    "postcss": "^8.5.28",
+    "size-limit": "^14.0.0",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.0"
+  },
+  "peerDependencies": {
+    "postcss": "^8.4.0"
+  },
+  "size-limit": [
+    {
+      "import": "*",
+      "limit": "700 B"
+    }
+  ],
+  "engines": {
+    "node": ">=22.0"
+  }
+}

@@ -1,0 +1,48 @@
+name: Test
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  full:
+    name: Node.js Latest Full
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Install Node.js & pnpm
+        uses: pnpm/setup@fbda4c85fc2e1e08721cd8763afea8f48d60f024 # v3.0.0
+        with:
+          version: 12
+          runtime: node@26
+      - name: Install dependencies
+        run: pnpm ci
+      - name: Run tests
+        run: pnpm test
+  short:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node:
+          - 24
+          - 22
+    name: Node.js ${{ matrix.node }} Quick
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Install Node.js & pnpm
+        uses: pnpm/setup@fbda4c85fc2e1e08721cd8763afea8f48d60f024 # v3.0.0
+        with:
+          version: 12
+          runtime: node@${{ matrix.node }}
+      - name: Install dependencies
+        run: pnpm ci
+      - name: Run unit tests
+        run: pnpm bnt
