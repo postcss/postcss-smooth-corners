@@ -31,13 +31,14 @@ function increaseForSquircle(decl, { AtRule }) {
   }
 }
 
-function isCircleOrTooSmall(value, minSize) {
+function isCircle(value) {
+  return [...value.matchAll(/(\d*\.?\d+)%/g)].some(
+    ([, number]) => Number(number) >= 50
+  )
+}
+
+function isTooSmall(value, minSize) {
   let lengths = [...value.matchAll(/(\d*\.?\d+)(rem|em|px|%)?/g)]
-  if (
-    lengths.some(([, number, unit]) => unit === '%' && Number(number) >= 50)
-  ) {
-    return true
-  }
   return (
     lengths.length > 0 &&
     lengths.every(
@@ -67,10 +68,13 @@ let plugin = (opts = {}) => {
         let hasVar = decl.value.includes('var(')
         if (!shape && decl.value === 'inherit') {
           decl.cloneBefore({ prop: 'corner-shape', value: 'inherit' })
+        } else if (!shape && opts.auto && isCircle(decl.value)) {
+          // Explicit round to override squircle from other rules
+          decl.cloneBefore({ prop: 'corner-shape', value: 'round' })
         } else if (
           !shape &&
           opts.auto &&
-          (hasVar || !isCircleOrTooSmall(decl.value, opts.autoMinSize ?? 5))
+          (hasVar || !isTooSmall(decl.value, opts.autoMinSize ?? 5))
         ) {
           decl.cloneBefore({ prop: 'corner-shape', value: 'squircle' })
           shape = 'squircle'

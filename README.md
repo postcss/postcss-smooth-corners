@@ -135,7 +135,8 @@ smoothCorners()
 
 With `auto: true`, the plugin makes all corners squircle. It adds
 `corner-shape: squircle` to every `border-radius` and fixes the size.
-It doesn’t change circles (`50%` or more) and very small radius.
+It sets `corner-shape: round` for circles (`50%` or more) to override
+squircle from other rules and doesn’t change very small radius.
 
 ```js
 smoothCorners({ auto: true })
@@ -161,6 +162,7 @@ smoothCorners({ auto: true })
   }
 }
 .avatar {
+  corner-shape: round;
   border-radius: 50%;
 }
 ```

@@ -98,8 +98,13 @@ test('adds squircle for variables in auto mode', () => {
   )
 })
 
-test('ignores circles in auto mode', () => {
-  run('a { border-radius: 50%; }', 'a { border-radius: 50%; }', { auto: true })
+test('sets round corner shape for circles in auto mode', () => {
+  run(
+    'a { border-radius: 50%; } b { border-radius: 10px 50%; }',
+    'a { corner-shape: round; border-radius: 50%; } ' +
+      'b { corner-shape: round; border-radius: 10px 50%; }',
+    { auto: true }
+  )
 })
 
 test('ignores small radius in auto mode', () => {
