@@ -4,3 +4,5 @@ import smoothCorners from '../index.js'
 smoothCorners({ props: '--radius' })
 // THROWS 'string' is not assignable to type 'boolean | undefined'
 smoothCorners({ auto: 'yes' })
+// THROWS 'number' is not assignable to type 'string'
+smoothCorners({ vars: { '--radius': 6 } })

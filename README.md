@@ -135,8 +135,17 @@ smoothCorners()
 
 With `auto: true`, the plugin makes all corners squircle. It adds
 `corner-shape: squircle` to every `border-radius` and fixes the size.
-It sets `corner-shape: round` for circles (`50%` or more) to override
-squircle from other rules and doesn’t change very small radius.
+
+It keeps round corners where squircle will not fit:
+
+- Circles (`50%` or more).
+- Pills, where the bigger squircle radius is more than half of `height`,
+  `width`, `block-size` or `inline-size` in the same rule. The plugin also
+  detects pills when the size and radius use the same variable.
+- Very small radius (see [`autoMinSize`](#autominsize)).
+
+For circles and pills, it adds explicit `corner-shape: round` to override
+squircle from other rules.
 
 ```js
 smoothCorners({ auto: true })
@@ -206,6 +215,19 @@ smoothCorners({ props: /^--radius-/ })
     --radius-m: 14px;
   }
 }
+```
+
+### `vars`
+
+Values of custom properties from other files to detect pills in `auto` mode.
+
+The plugin can’t know the value of `border-radius: var(--base-radius)`
+if the variable is defined in another file. If the rule has `height: 0.75rem`,
+it can’t tell whether it is a pill and shows a warning. Pass the variable
+value or set `corner-shape` in this rule explicitly.
+
+```js
+smoothCorners({ auto: true, vars: { '--base-radius': '0.375rem' } })
 ```
 
 ## Inheritance

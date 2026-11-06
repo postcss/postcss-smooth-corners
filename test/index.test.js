@@ -164,3 +164,65 @@ test('supports global regexp in props', () => {
     { props: /^--radius/g }
   )
 })
+
+test('sets round corner shape for pills with same variable in auto mode', () => {
+  run(
+    'a { height: var(--line); border-radius: var(--line); }',
+    'a { height: var(--line); corner-shape: round; border-radius: var(--line); }',
+    { auto: true }
+  )
+})
+
+test('sets round corner shape for pills with plain values in auto mode', () => {
+  run(
+    'a { height: 20px; border-radius: 6px; } ' +
+      'b { block-size: 2rem; border-radius: 0.75rem; } ' +
+      'i { width: 1rem; border-radius: 4px 6px / 6px; }',
+    'a { height: 20px; corner-shape: round; border-radius: 6px; } ' +
+      'b { block-size: 2rem; corner-shape: round; border-radius: 0.75rem; } ' +
+      'i { width: 1rem; corner-shape: round; border-radius: 4px 6px / 6px; }',
+    { auto: true }
+  )
+})
+
+test('keeps squircle for big elements in auto mode', () => {
+  run(
+    'a { height: 40px; height: auto; border-radius: 10px; }',
+    'a { height: 40px; height: auto; corner-shape: squircle; ' +
+      'border-radius: 10px; ' +
+      '@supports (corner-shape:squircle) { border-radius: 17px } }',
+    { auto: true }
+  )
+})
+
+test('uses known variables to detect pills in auto mode', () => {
+  run(
+    'a { height: 0.75rem; border-radius: var(--base-radius); } ' +
+      'b { height: 3rem; border-radius: var(--base-radius); }',
+    'a { height: 0.75rem; corner-shape: round; ' +
+      'border-radius: var(--base-radius); } ' +
+      'b { height: 3rem; corner-shape: squircle; ' +
+      'border-radius: var(--base-radius); }',
+    { auto: true, vars: { '--base-radius': '0.375rem' } }
+  )
+})
+
+test('warns about unknown variable with plain size in auto mode', () => {
+  let result = postcss([plugin({ auto: true })]).process(
+    'a { height: 0.75rem; border-radius: var(--base-radius); } ' +
+      'b { height: var(--h); border-radius: var(--r); }',
+    { from: undefined }
+  )
+  equal(
+    result.css,
+    'a { height: 0.75rem; corner-shape: squircle; ' +
+      'border-radius: var(--base-radius); } ' +
+      'b { height: var(--h); corner-shape: squircle; border-radius: var(--r); }'
+  )
+  equal(result.warnings().length, 1)
+  equal(
+    result.warnings()[0].text,
+    'Can’t detect pill shape, because radius uses unknown variable. ' +
+      'Set corner-shape explicitly or add variable value to the vars option.'
+  )
+})
