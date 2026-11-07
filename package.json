@@ -41,14 +41,14 @@
   },
   "devDependencies": {
     "@logux/oxc-configs": "^1.2.0",
-    "@types/node": "^26.6.5",
+    "@types/node": "^26.6.6",
     "better-node-test": "^1.0.0",
-    "oxfmt": "^0.74.0",
-    "oxlint": "^1.89.0",
-    "oxlint-tsgolint": "^7.0.2005",
-    "postcss": "^8.5.31",
+    "oxfmt": "^0.76.0",
+    "oxlint": "^1.91.0",
+    "oxlint-tsgolint": "^7.0.2006",
+    "postcss": "^8.5.32",
     "typescript": "^7.0.2",
-    "vite": "^8.3.5"
+    "vite": "^8.3.6"
   },
   "peerDependencies": {
     "postcss": "^8.4.0"
